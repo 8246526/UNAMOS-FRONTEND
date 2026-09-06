@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Mascotas - Ficha Médica</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 20px; text-align: center; }
+        .card { background: white; border-radius: 15px; padding: 20px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; }
+        .alert-box { background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; font-weight: bold; margin-top: 15px; }
+        .info { text-align: left; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <img class="avatar" src="https://unsplash.com" alt="Foto de la mascota">
+        <h2>¡Hola! Me llamo Max 🐕</h2>
+        <div class="alert-box">⚠️ SE ENCUENTRA PERDIDO / REQUIERE MEDICACIÓN</div>
+        
+        <div class="info">
+            <p><strong>Condición:</strong> Sufre de Epilepsia Canina.</p>
+            <p><strong>Medicamento:</strong> Fenobarbital cada 12 horas.</p>
+            <p><strong>Contacto del Dueño:</strong> +57 300 123 4567</p>
+        </div>
+    </div>
+
+    <script>
+        // Extraemos el ID de la mascota desde la URL del QR (ej: ://sitio.com)
+        const urlParams = new URLSearchParams(window.location.search);
+        const mascotaId = urlParams.get('id') || 'Mascota_Desconocida';
+
+        // Función para enviar los datos al servidor backend
+        async function enviarAlerta(lat, lon, precision) {
+            try {
+                await fetch('https://tu-servidor-backend.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mascotaId, lat, lon, precision, compartido: true })
+                });
+            } catch (error) {
+                console.error("Error al reportar alerta:", error);
+            }
+        }
+
+        // Activación automática de la geolocalización al leer el QR
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // El usuario aceptó: enviamos coordenadas exactas del GPS
+                        enviarAlerta(position.coords.latitude, position.coords.longitude, position.coords.accuracy);
+                    },
+                    (error) => {
+                        // El usuario denegó el permiso o falló el GPS
+                        console.warn("Permiso denegado o error de GPS. Enviando alerta sin ubicación.");
+                        enviarAlerta(null, null, null); 
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            } else {
+                // Navegador antiguo sin soporte de Geolocalización
+                enviarAlerta(null, null, null);
+            }
+        };
+    </script>
+</body>
+</html>
