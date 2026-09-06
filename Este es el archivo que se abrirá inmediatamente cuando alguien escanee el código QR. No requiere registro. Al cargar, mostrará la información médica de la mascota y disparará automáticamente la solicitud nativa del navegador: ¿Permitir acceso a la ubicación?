@@ -34,7 +34,7 @@
         // Función para enviar los datos al servidor backend
         async function enviarAlerta(lat, lon, precision) {
             try {
-                await fetch('https://tu-servidor-backend.com', {
+                await fetch('https://onrender.com', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mascotaId, lat, lon, precision, compartido: true })
