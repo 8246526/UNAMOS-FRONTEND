@@ -27,11 +27,11 @@
     </div>
 
     <script>
-        // Extraemos el ID de la mascota desde la URL del QR (ej: ://sitio.com)
+        // Extraemos el ID de la mascota desde la URL del QR
         const urlParams = new URLSearchParams(window.location.search);
         const mascotaId = urlParams.get('id') || 'Mascota_Desconocida';
 
-        // Función para enviar los datos al servidor backend
+        // Función para enviar los datos al servidor backend de Render
         async function enviarAlerta(lat, lon, precision) {
             try {
                 await fetch('https://onrender.com', {
